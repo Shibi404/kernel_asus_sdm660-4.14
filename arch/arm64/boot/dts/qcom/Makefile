@@ -423,6 +423,9 @@ dtb-$(CONFIG_ARCH_MDM9607) += mdm9607-cdp.dtb \
         mdm9607-mtp.dtb \
 	mdm9607-rcm.dtb \
 
+ifeq ($(CONFIG_MACH_ASUS_SDM660),y)
+dtb-$(CONFIG_MACH_ASUS_X01BD) += sdm660-qrd-X01BD.dtb
+else
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-$(CONFIG_ARCH_SDM660) += \
 		sdm660-mtp-external-codec-overlay.dtbo \
@@ -511,6 +514,7 @@ dtb-$(CONFIG_ARCH_SDM429W) += sdm429-wtp.dtb\
 endif
 
 
+endif
 endif
 
 ifeq ($(CONFIG_ARM64),y)
