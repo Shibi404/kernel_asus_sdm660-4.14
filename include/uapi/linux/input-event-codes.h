@@ -695,6 +695,21 @@
 #define KEY_FP_GESTURE_LONG_PRESS	0x2ec
 #define KEY_FP_GESTURE_TAP		0x2ed
 
+#ifdef CONFIG_MACH_ASUS_SDM660
+#define KEY_TP_GESTURE_C		748
+#define KEY_TP_GESTURE_E		749
+#define KEY_TP_GESTURE_M		750
+#define KEY_TP_GESTURE_O		751
+#define KEY_TP_GESTURE_S		752
+#define KEY_TP_GESTURE_V		753
+#define KEY_TP_GESTURE_W		754
+#define KEY_TP_GESTURE_Z		755
+#define KEY_TP_GESTURE_SWIPE_UP		756
+#define KEY_TP_GESTURE_SWIPE_DOWN	757
+#define KEY_TP_GESTURE_SWIPE_LEFT	758
+#define KEY_TP_GESTURE_SWIPE_RIGHT	759
+#endif
+
 /* We avoid low common keys in module aliases so they don't get huge. */
 #define KEY_MIN_INTERESTING	KEY_MUTE
 #define KEY_MAX			0x2ff
