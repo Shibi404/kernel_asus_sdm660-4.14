@@ -48,10 +48,6 @@
 #include <linux/sched.h>
 #include <uapi/linux/sched/types.h>
 
-#ifdef CONFIG_MACH_ASUS_X01BD
-#include <linux/wakelock.h>
-#endif
-
 #include "mdss_fb.h"
 #include "mdss_mdp_splash_logo.h"
 #define CREATE_TRACE_POINTS
@@ -109,7 +105,7 @@ static u32 mdss_fb_pseudo_palette[16] = {
 static struct msm_mdp_interface *mdp_instance;
 
 #ifdef CONFIG_MACH_ASUS_X01BD
-static struct wake_lock early_unblank_wakelock;
+static struct wakeup_source early_unblank_wakelock;
 #endif
 
 static int mdss_fb_register(struct msm_fb_data_type *mfd);
@@ -1669,7 +1665,7 @@ static void asus_lcd_early_unblank_func(struct work_struct *work)
 	if (!fbi)
 		return;
 
-	wake_lock_timeout(&early_unblank_wakelock,msecs_to_jiffies(300));
+	__pm_wakeup_event(&early_unblank_wakelock,msecs_to_jiffies(300));
 	fb_blank(fbi, FB_BLANK_UNBLANK);
 	lcd_suspend_flag = false;
 	mfd->early_unblank_work_queued = false;
@@ -5338,8 +5334,7 @@ int __init mdss_fb_init(void)
 
 #ifdef CONFIG_MACH_ASUS_X01BD
 	asus_lcd_early_unblank_wq = create_singlethread_workqueue("display_early_wq");
-	wake_lock_init(&early_unblank_wakelock, WAKE_LOCK_SUSPEND,
-			"early_unblank-update");
+	wakeup_source_init(&early_unblank_wakelock, "early_unblank-update");
 #endif
 	return 0;
 }
