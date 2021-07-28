@@ -911,6 +911,10 @@ __power_supply_register(struct device *parent,
 
 	rc = psy_register_thermal(psy);
 	if (rc)
+		goto wakeup_init_failed;
+
+	rc = psy_register_thermal(psy);
+	if (rc)
 		goto register_thermal_failed;
 
 	rc = power_supply_create_triggers(psy);

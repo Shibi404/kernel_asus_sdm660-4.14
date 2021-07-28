@@ -151,103 +151,12 @@ static const struct mmc_fixup mmc_ext_csd_fixups[] = {
 	END_FIXUP
 };
 
-#ifndef SDIO_VENDOR_ID_TI
-#define SDIO_VENDOR_ID_TI		0x0097
-#endif
-
-#ifndef SDIO_DEVICE_ID_TI_WL1271
-#define SDIO_DEVICE_ID_TI_WL1271	0x4076
-#endif
-
-#ifndef SDIO_VENDOR_ID_STE
-#define SDIO_VENDOR_ID_STE		0x0020
-#endif
-
-#ifndef SDIO_DEVICE_ID_STE_CW1200
-#define SDIO_DEVICE_ID_STE_CW1200	0x2280
-#endif
-
-#ifndef SDIO_DEVICE_ID_MARVELL_8797_F0
-#define SDIO_DEVICE_ID_MARVELL_8797_F0	0x9128
-#endif
-
-#ifndef SDIO_VENDOR_ID_MSM
-#define SDIO_VENDOR_ID_MSM		0x0070
-#endif
-
-#ifndef SDIO_DEVICE_ID_MSM_WCN1314
-#define SDIO_DEVICE_ID_MSM_WCN1314	0x2881
-#endif
-
-#ifndef SDIO_VENDOR_ID_MSM_QCA
-#define SDIO_VENDOR_ID_MSM_QCA		0x271
-#endif
-
-#ifndef SDIO_DEVICE_ID_MSM_QCA_AR6003_1
-#define SDIO_DEVICE_ID_MSM_QCA_AR6003_1	0x300
-#endif
-
-#ifndef SDIO_DEVICE_ID_MSM_QCA_AR6003_2
-#define SDIO_DEVICE_ID_MSM_QCA_AR6003_2	0x301
-#endif
-
-#ifndef SDIO_DEVICE_ID_MSM_QCA_AR6004_1
-#define SDIO_DEVICE_ID_MSM_QCA_AR6004_1	0x400
-#endif
-
-#ifndef SDIO_DEVICE_ID_MSM_QCA_AR6004_2
-#define SDIO_DEVICE_ID_MSM_QCA_AR6004_2	0x401
-#endif
-
-#ifndef SDIO_VENDOR_ID_QCA6574
-#define SDIO_VENDOR_ID_QCA6574		0x271
-#endif
-
-#ifndef SDIO_DEVICE_ID_QCA6574
-#define SDIO_DEVICE_ID_QCA6574		0x50a
-#endif
-
-#ifndef SDIO_VENDOR_ID_QCA9377
-#define SDIO_VENDOR_ID_QCA9377		0x271
-#endif
-
-#ifndef SDIO_DEVICE_ID_QCA9377
-#define SDIO_DEVICE_ID_QCA9377		0x701
-#endif
-
-/*
- * This hook just adds a quirk for all sdio devices
- */
-static void add_quirk_for_sdio_devices(struct mmc_card *card, int data)
-{
-	if (mmc_card_sdio(card))
-		card->quirks |= data;
-}
-
 static const struct mmc_fixup sdio_fixup_methods[] = {
-	/* by default sdio devices are considered CLK_GATING broken */
-	/* good cards will be whitelisted as they are tested */
-	SDIO_FIXUP(SDIO_ANY_ID, SDIO_ANY_ID,
-		   add_quirk_for_sdio_devices,
-		   MMC_QUIRK_BROKEN_CLK_GATING),
+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
+		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),
 
-	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
-		   remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
-
-	SDIO_FIXUP(SDIO_VENDOR_ID_MSM, SDIO_DEVICE_ID_MSM_WCN1314,
-		   remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
-
-	SDIO_FIXUP(SDIO_VENDOR_ID_MSM_QCA, SDIO_DEVICE_ID_MSM_QCA_AR6003_1,
-		   remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
-
-	SDIO_FIXUP(SDIO_VENDOR_ID_MSM_QCA, SDIO_DEVICE_ID_MSM_QCA_AR6003_2,
-		   remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
-
-	SDIO_FIXUP(SDIO_VENDOR_ID_MSM_QCA, SDIO_DEVICE_ID_MSM_QCA_AR6004_1,
-		   remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
-
-	SDIO_FIXUP(SDIO_VENDOR_ID_MSM_QCA, SDIO_DEVICE_ID_MSM_QCA_AR6004_2,
-		   remove_quirk, MMC_QUIRK_BROKEN_CLK_GATING),
+	SDIO_FIXUP(SDIO_VENDOR_ID_TI_WL1251, SDIO_DEVICE_ID_TI_WL1251,
+		   add_quirk, MMC_QUIRK_DISABLE_CD),
 
 	SDIO_FIXUP(SDIO_VENDOR_ID_TI, SDIO_DEVICE_ID_TI_WL1271,
 		   add_quirk, MMC_QUIRK_NONSTD_FUNC_IF),

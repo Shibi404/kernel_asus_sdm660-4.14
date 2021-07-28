@@ -562,6 +562,16 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
 	if (ret)
 		goto fail;
 
+	if (!dev->dma_parms) {
+		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
+					      GFP_KERNEL);
+		if (!dev->dma_parms)
+			return -ENOMEM;
+	}
+	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+
+	msm_gem_shrinker_init(ddev);
+
 	switch (get_mdp_ver(pdev)) {
 	case KMS_MDP4:
 		kms = mdp4_kms_init(ddev);
@@ -2098,24 +2108,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
 
 static void msm_pdev_shutdown(struct platform_device *pdev)
 {
-	struct drm_device *ddev = platform_get_drvdata(pdev);
-	struct msm_drm_private *priv = NULL;
+	struct drm_device *drm = platform_get_drvdata(pdev);
+	struct msm_drm_private *priv = drm ? drm->dev_private : NULL;
 
-	if (!ddev) {
-		DRM_ERROR("invalid drm device node\n");
+	if (!priv || !priv->kms)
 		return;
-	}
 
-	priv = ddev->dev_private;
-	if (!priv) {
-		DRM_ERROR("invalid msm drm private node\n");
-		return;
-	}
-
-	msm_lastclose(ddev);
-
-	/* set this after lastclose to allow kickoff from lastclose */
-	priv->shutdown_in_progress = true;
+	drm_atomic_helper_shutdown(drm);
 }
 
 static const struct of_device_id dt_match[] = {
