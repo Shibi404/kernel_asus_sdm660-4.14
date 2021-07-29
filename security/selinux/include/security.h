@@ -80,16 +80,7 @@ enum {
 };
 #define POLICYDB_CAPABILITY_MAX (__POLICYDB_CAPABILITY_MAX - 1)
 
-extern char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX];
-
-extern int selinux_android_netlink_route;
-extern int selinux_android_netlink_getneigh;
-extern int selinux_policycap_netpeer;
-extern int selinux_policycap_openperm;
-extern int selinux_policycap_extsockclass;
-extern int selinux_policycap_alwaysnetwork;
-extern int selinux_policycap_cgroupseclabel;
-extern int selinux_policycap_nnp_nosuid_transition;
+extern const char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX];
 
 /*
  * type_datum properties
@@ -113,6 +104,8 @@ struct selinux_state {
 	bool initialized;
 	bool policycap[__POLICYDB_CAPABILITY_MAX];
 	bool android_netlink_route;
+	bool android_netlink_getneigh;
+
 	struct selinux_avc *avc;
 	struct selinux_ss *ss;
 };
@@ -190,6 +183,13 @@ static inline bool selinux_android_nlroute_getlink(void)
 	struct selinux_state *state = &selinux_state;
 
 	return state->android_netlink_route;
+}
+
+static inline bool selinux_android_nlroute_getneigh(void)
+{
+	struct selinux_state *state = &selinux_state;
+
+	return state->android_netlink_getneigh;
 }
 
 int security_mls_enabled(struct selinux_state *state);
@@ -402,7 +402,6 @@ extern struct vfsmount *selinuxfs_mount;
 extern void selnl_notify_setenforce(int val);
 extern void selnl_notify_policyload(u32 seqno);
 extern int selinux_nlmsg_lookup(u16 sclass, u16 nlmsg_type, u32 *perm);
-extern void selinux_nlmsg_init(void);
 
 extern void avtab_cache_init(void);
 extern void ebitmap_cache_init(void);
